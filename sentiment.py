@@ -46,3 +46,26 @@ print(W[:5])
 print(y_train_onehot[:5])
 print(W.shape, b.shape)
 print(y_train_onehot[0], y_train.values[0])
+
+def softmax(scores):
+    exp_scores = np.exp(scores - np.max(scores, axis=1, keepdims=True))
+    return exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+learning_rate = 0.5
+epochs = 350
+
+for epoch in range(epochs):
+    scores = X_train_vec @ W + b
+    probs = softmax(scores)
+
+    loss = -np.mean(np.sum(y_train_onehot * np.log(probs + 1e-9), axis=1))
+
+    error = probs - y_train_onehot
+    dW = X_train_vec.T @ error / n_samples
+    db = np.mean(error, axis=0)
+
+    W -= learning_rate * dW
+    b -= learning_rate * db
+
+    if epoch % 50 == 0:
+        print(f"epoch {epoch}, loss {loss:.4f}")
