@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report
 import numpy as np
+import joblib
 
 df = pd.read_csv("data/tripadvisor_hotel_reviews.csv")
 print(df.shape)
@@ -82,3 +83,7 @@ test_probs = softmax(test_scores)
 y_pred = np.argmax(test_probs, axis=1) + 1
 
 print(classification_report(y_test, y_pred))
+
+joblib.dump({"W": W, "b": b, "vectorizer": vectorizer}, "model.pkl")
+
+
