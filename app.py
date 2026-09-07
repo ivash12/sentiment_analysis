@@ -1,5 +1,4 @@
-lan = input("Choose the language (eng or nl): ")
-while True:
-       text = input("Enter the text: ")
-       if text == "exit":
-           break
+from predict import predict_sentiment
+message = str(input("Enter your message here to get its grade: "))
+print(predict_sentiment(message))
+
