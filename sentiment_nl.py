@@ -5,6 +5,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report
 import numpy as np
 import joblib
+from nltk.corpus import stopwords
+import nltk
+nltk.download("stopwords")
+
 
 df = pd.read_parquet("data/RestoReviewRawdata.parquet")
 print(df.shape)
@@ -22,3 +26,16 @@ def clean_text(text):
     return text
 
 df["clean_review"] = df["reviewText"].apply(clean_text)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    df["clean_review"], df["Rating"],
+    test_size=0.2, random_state=42, stratify=df["Rating"]
+)
+
+dutch_stopwords = stopwords.words("dutch")
+vectorizer = TfidfVectorizer(max_features=2000, stop_words=dutch_stopwords)
+
+X_train_vec = vectorizer.fit_transform(X_train).toarray()
+X_test_vec = vectorizer.transform(X_test).toarray()
+
+print(X_train_vec.shape)
